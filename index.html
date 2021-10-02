@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://unpkg.com/redux@4.1.1/dist/redux.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script>
+
+    // ACTIONS
+    var myAction = {
+      type: "ADD_ITEM",
+      itemName: "Strawberry"
+    }
+
+    // ACTION CREATOR
+    var myActionCreator = (itemName) => {
+      return {
+        type: "ADD_ITEM",
+        itemName: itemName
+      }
+    }
+    var addStudentAction = (studentName) => {
+      return {
+        type: "ADD_STUDENT",
+        studentName: studentName
+      }
+    }
+
+    // INITIAL REDUCER STATE
+    var initialItemsState = {
+      items: []
+    }
+    var initialStudentsState = {
+      students: ["Ali", "Zafer"]
+    }
+
+    // REDUCER
+    var myReducer = (state = initialItemsState, action) => {
+      switch (action.type) {
+        case "ADD_ITEM":
+          return {...state, items:[...state.items, action.itemName]}
+        default:
+          return state
+      }
+    }
+
+    var studentReducer = (state = initialStudentsState, action) => {
+      switch (action.type) {
+        case "ADD_STUDENT":
+          return {...state, students:[...state.students, action.studentName]}
+        default:
+          return state
+      }
+    }
+
+    // STORE
+    // let store = Redux.createStore(myReducer)
+    let store = Redux.createStore(
+      Redux.combineReducers({myReducer, studentReducer})
+    );
+    
+    // SUBSCRIPTIONS
+    store.subscribe(() => {
+      var myContainer = document.getElementById("root");
+      root.innerHTML = root.innerHTML + "<br>" + JSON.stringify(store.getState())
+    })
+    store.subscribe(()=> console.log(store.getState()))
+    //store.subscribe(()=> fetch("MY_ENDPOINT"));
+
+    // DISPATCHING EVENTS
+    store.dispatch(myAction);
+    store.dispatch(myActionCreator("Blueberry"))
+    store.dispatch(addStudentAction("Hasan"))
+    store.dispatch({
+      type: "ADD_ITEM",
+      itemName: "Apple"
+    });
+
+
+  </script>
+
+</body>
+
+</html>
